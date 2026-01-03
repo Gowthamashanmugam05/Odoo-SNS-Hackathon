@@ -152,7 +152,7 @@ const Auth: React.FC = () => {
           </div>
 
           {isSignup ? (
-            <Form {...signupForm}>
+            <Form key="signup" {...signupForm}>
               <form onSubmit={signupForm.handleSubmit(handleSignup)} className="space-y-4">
                 <FormField
                   control={signupForm.control}
@@ -162,7 +162,7 @@ const Auth: React.FC = () => {
                       <FormLabel>Full Name</FormLabel>
                       <FormControl>
                         <div className="relative">
-                          <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+                          <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none z-10" />
                           <Input placeholder="John Doe" className="pl-10" {...field} />
                         </div>
                       </FormControl>
@@ -179,7 +179,7 @@ const Auth: React.FC = () => {
                       <FormLabel>Email</FormLabel>
                       <FormControl>
                         <div className="relative">
-                          <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+                          <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none z-10" />
                           <Input type="email" placeholder="you@example.com" className="pl-10" {...field} />
                         </div>
                       </FormControl>
@@ -196,7 +196,7 @@ const Auth: React.FC = () => {
                       <FormLabel>Password</FormLabel>
                       <FormControl>
                         <div className="relative">
-                          <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+                          <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none z-10" />
                           <Input type="password" placeholder="••••••••" className="pl-10" {...field} />
                         </div>
                       </FormControl>
@@ -213,7 +213,7 @@ const Auth: React.FC = () => {
                       <FormLabel>Confirm Password</FormLabel>
                       <FormControl>
                         <div className="relative">
-                          <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+                          <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none z-10" />
                           <Input type="password" placeholder="••••••••" className="pl-10" {...field} />
                         </div>
                       </FormControl>
@@ -229,7 +229,7 @@ const Auth: React.FC = () => {
               </form>
             </Form>
           ) : (
-            <Form {...loginForm}>
+            <Form key="login" {...loginForm}>
               <form onSubmit={loginForm.handleSubmit(handleLogin)} className="space-y-4">
                 <FormField
                   control={loginForm.control}
@@ -239,7 +239,7 @@ const Auth: React.FC = () => {
                       <FormLabel>Email</FormLabel>
                       <FormControl>
                         <div className="relative">
-                          <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+                          <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none z-10" />
                           <Input type="email" placeholder="you@example.com" className="pl-10" {...field} />
                         </div>
                       </FormControl>
@@ -256,7 +256,7 @@ const Auth: React.FC = () => {
                       <FormLabel>Password</FormLabel>
                       <FormControl>
                         <div className="relative">
-                          <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+                          <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none z-10" />
                           <Input type="password" placeholder="••••••••" className="pl-10" {...field} />
                         </div>
                       </FormControl>
