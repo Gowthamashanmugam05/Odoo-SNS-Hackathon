@@ -25,10 +25,10 @@ const features = [
 ];
 
 const destinations = [
-  { name: 'Paris', country: 'France', image: 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=400' },
-  { name: 'Tokyo', country: 'Japan', image: 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=400' },
-  { name: 'Bali', country: 'Indonesia', image: 'https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=400' },
-  { name: 'Rome', country: 'Italy', image: 'https://images.unsplash.com/photo-1552832230-c0197dd311b5?w=400' },
+  { name: 'Taj Mahal', country: 'India', image: 'https://images.unsplash.com/photo-1564507592333-c60657eea523?w=400' },
+  { name: 'Jaipur', country: 'India', image: 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=400' },
+  { name: 'Goa', country: 'India', image: 'https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=400' },
+  { name: 'Kerala', country: 'India', image: 'https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?w=400' },
 ];
 
 const Index: React.FC = () => {

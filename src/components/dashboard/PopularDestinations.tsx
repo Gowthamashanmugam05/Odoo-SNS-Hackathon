@@ -3,10 +3,18 @@ import { motion } from 'framer-motion';
 import { MapPin, TrendingUp } from 'lucide-react';
 
 const destinations = [
-  { name: 'Paris', country: 'France', image: 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=300' },
-  { name: 'Tokyo', country: 'Japan', image: 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=300' },
-  { name: 'Bali', country: 'Indonesia', image: 'https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=300' },
-  { name: 'Rome', country: 'Italy', image: 'https://images.unsplash.com/photo-1552832230-c0197dd311b5?w=300' },
+  { name: 'Taj Mahal', country: 'India', image: 'https://images.unsplash.com/photo-1564507592333-c60657eea523?w=300' },
+  { name: 'Jaipur', country: 'India', image: 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=300' },
+  { name: 'Goa', country: 'India', image: 'https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=300' },
+  { name: 'Kerala', country: 'India', image: 'https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?w=300' },
+  { name: 'Varanasi', country: 'India', image: 'https://images.unsplash.com/photo-1605640840605-14ac1855827b?w=300' },
+  { name: 'Mumbai', country: 'India', image: 'https://images.unsplash.com/photo-J4Ui2ch3oRU?w=300' },
+  { name: 'Delhi', country: 'India', image: 'https://images.unsplash.com/photo-1582510003544-4d00b7f74220?w=300' },
+  { name: 'Rajasthan', country: 'India', image: 'https://images.unsplash.com/photo-1599661046289-e3184284d746?w=300' },
+  { name: 'Himalayas', country: 'India', image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=300' },
+  { name: 'Andaman', country: 'India', image: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=300' },
+  { name: 'Amritsar', country: 'India', image: 'https://images.unsplash.com/photo-1605640840605-14ac1855827b?w=300' },
+  { name: 'Mysore', country: 'India', image: 'https://images.unsplash.com/photo-1626602840072-7d7e38c3b40c?w=300' },
 ];
 
 const PopularDestinations: React.FC = () => {
@@ -17,7 +25,7 @@ const PopularDestinations: React.FC = () => {
         <h3 className="font-display text-lg font-semibold">Popular Destinations</h3>
       </div>
 
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-3 gap-3">
         {destinations.map((dest, index) => (
           <motion.div
             key={dest.name}
@@ -29,7 +37,7 @@ const PopularDestinations: React.FC = () => {
             <img
               src={dest.image}
               alt={dest.name}
-              className="w-full h-24 object-cover transition-transform duration-300 group-hover:scale-110"
+              className="w-full h-20 object-cover transition-transform duration-300 group-hover:scale-110"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
             <div className="absolute bottom-2 left-2 right-2">
