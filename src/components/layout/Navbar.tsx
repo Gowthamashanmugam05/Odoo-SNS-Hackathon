@@ -1,9 +1,10 @@
 import React from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Globe, Menu, X, User, LogOut, Map, Plus, LayoutDashboard } from 'lucide-react';
+import { Menu, X, User, LogOut, Map, Plus, LayoutDashboard } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
+import logo from '@/assets/logo.svg';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -39,13 +40,17 @@ const Navbar: React.FC = () => {
       <div className="section-container">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link to={user ? '/dashboard' : '/'} className="flex items-center gap-2 group">
-            <div className="relative">
-              <Globe className="h-8 w-8 text-primary transition-transform group-hover:rotate-12" />
-              <div className="absolute inset-0 bg-primary/20 rounded-full blur-lg opacity-0 group-hover:opacity-100 transition-opacity" />
+          <Link to={user ? '/dashboard' : '/'} className="flex items-center gap-2 group flex-shrink-0">
+            <div className="relative flex items-center justify-center">
+              <img 
+                src={logo}  
+                alt="TripNest Logo" 
+                className="h-10 w-10 object-contain transition-transform group-hover:scale-110 group-hover:rotate-3" 
+              />
+              <div className="absolute inset-0 bg-blue-500/20 rounded-full blur-lg opacity-0 group-hover:opacity-100 transition-opacity" />
             </div>
-            <span className="font-display text-xl font-bold text-foreground">
-              Globe<span className="text-primary">Trotter</span>
+            <span className="font-display text-xl font-bold whitespace-nowrap">
+              <span className="text-blue-700">Trip</span><span className="text-orange-500">Nest</span>
             </span>
           </Link>
 
