@@ -8,13 +8,13 @@ const destinations = [
   { name: 'Goa', country: 'India', image: 'https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=300' },
   { name: 'Kerala', country: 'India', image: 'https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?w=300' },
   { name: 'Varanasi', country: 'India', image: 'https://images.unsplash.com/photo-1605640840605-14ac1855827b?w=300' },
-  { name: 'Mumbai', country: 'India', image: 'https://images.unsplash.com/photo-J4Ui2ch3oRU?w=300' },
+  { name: 'Mumbai', country: 'India', image: 'https://plus.unsplash.com/premium_photo-1693149687685-a674a6b1771f?q=80&w=1171&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' },
   { name: 'Delhi', country: 'India', image: 'https://images.unsplash.com/photo-1582510003544-4d00b7f74220?w=300' },
-  { name: 'Rajasthan', country: 'India', image: 'https://images.unsplash.com/photo-1599661046289-e3184284d746?w=300' },
+  { name: 'Rajasthan', country: 'India', image: 'https://images.unsplash.com/photo-1599661046289-e31897846e41?q=80&w=627&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' },
   { name: 'Himalayas', country: 'India', image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=300' },
   { name: 'Andaman', country: 'India', image: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=300' },
   { name: 'Amritsar', country: 'India', image: 'https://images.unsplash.com/photo-1605640840605-14ac1855827b?w=300' },
-  { name: 'Mysore', country: 'India', image: 'https://images.unsplash.com/photo-1626602840072-7d7e38c3b40c?w=300' },
+  { name: 'Mysore', country: 'India', image: 'https://images.unsplash.com/photo-1600112356915-089abb8fc71a?q=80&w=1294&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' },
 ];
 
 const PopularDestinations: React.FC = () => {
