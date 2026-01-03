@@ -1,5 +1,13 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { supabase } from '@/integrations/supabase/client';
+import { where, orderBy } from 'firebase/firestore';
+import {
+  addDocument,
+  getDocuments,
+  getDocument,
+  updateDocument,
+  deleteDocument,
+  queryDocuments,
+} from '@/integrations/firebase/operations';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 
@@ -66,28 +74,17 @@ export const useTrips = () => {
   const tripsQuery = useQuery({
     queryKey: ['trips', user?.id],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from('trips')
-        .select('*')
-        .eq('user_id', user!.id)
-        .order('start_date', { ascending: true });
-      
-      if (error) throw error;
-      return data as Trip[];
+      const docs = await getDocuments('trips', [where('user_id', '==', user!.id), orderBy('start_date', 'asc')]);
+      return docs as Trip[];
     },
     enabled: !!user,
   });
 
   const createTrip = useMutation({
     mutationFn: async (trip: Omit<Trip, 'id' | 'user_id' | 'share_token' | 'created_at' | 'updated_at'>) => {
-      const { data, error } = await supabase
-        .from('trips')
-        .insert({ ...trip, user_id: user!.id })
-        .select()
-        .single();
-      
-      if (error) throw error;
-      return data as Trip;
+      const id = await addDocument('trips', { ...trip, user_id: user!.id });
+      const doc = await getDocument('trips', id);
+      return doc as Trip;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['trips'] });
@@ -100,15 +97,9 @@ export const useTrips = () => {
 
   const updateTrip = useMutation({
     mutationFn: async ({ id, ...updates }: Partial<Trip> & { id: string }) => {
-      const { data, error } = await supabase
-        .from('trips')
-        .update(updates)
-        .eq('id', id)
-        .select()
-        .single();
-      
-      if (error) throw error;
-      return data as Trip;
+      await updateDocument('trips', id, updates as Record<string, any>);
+      const doc = await getDocument('trips', id);
+      return doc as Trip;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['trips'] });
@@ -121,8 +112,7 @@ export const useTrips = () => {
 
   const deleteTrip = useMutation({
     mutationFn: async (id: string) => {
-      const { error } = await supabase.from('trips').delete().eq('id', id);
-      if (error) throw error;
+      await deleteDocument('trips', id);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['trips'] });
@@ -149,14 +139,8 @@ export const useTripDetails = (tripId: string | undefined) => {
   const tripQuery = useQuery({
     queryKey: ['trip', tripId],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from('trips')
-        .select('*')
-        .eq('id', tripId!)
-        .maybeSingle();
-      
-      if (error) throw error;
-      return data as Trip | null;
+      const doc = await getDocument('trips', tripId!);
+      return (doc as Trip) ?? null;
     },
     enabled: !!tripId,
   });
@@ -164,14 +148,8 @@ export const useTripDetails = (tripId: string | undefined) => {
   const citiesQuery = useQuery({
     queryKey: ['trip-cities', tripId],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from('trip_cities')
-        .select('*')
-        .eq('trip_id', tripId!)
-        .order('order_index', { ascending: true });
-      
-      if (error) throw error;
-      return data as TripCity[];
+      const docs = await getDocuments('trip_cities', [where('trip_id', '==', tripId!), orderBy('order_index', 'asc')]);
+      return docs as TripCity[];
     },
     enabled: !!tripId,
   });
@@ -182,28 +160,17 @@ export const useTripDetails = (tripId: string | undefined) => {
       if (!citiesQuery.data?.length) return [];
       
       const cityIds = citiesQuery.data.map(c => c.id);
-      const { data, error } = await supabase
-        .from('activities')
-        .select('*')
-        .in('trip_city_id', cityIds)
-        .order('activity_date', { ascending: true });
-      
-      if (error) throw error;
-      return data as Activity[];
+      const docs = await getDocuments('activities', [where('trip_city_id', 'in', cityIds), orderBy('activity_date', 'asc')]);
+      return docs as Activity[];
     },
     enabled: !!citiesQuery.data?.length,
   });
 
   const addCity = useMutation({
     mutationFn: async (city: Omit<TripCity, 'id' | 'created_at' | 'updated_at'>) => {
-      const { data, error } = await supabase
-        .from('trip_cities')
-        .insert(city)
-        .select()
-        .single();
-      
-      if (error) throw error;
-      return data as TripCity;
+      const id = await addDocument('trip_cities', city);
+      const doc = await getDocument('trip_cities', id);
+      return doc as TripCity;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['trip-cities', tripId] });
@@ -216,15 +183,9 @@ export const useTripDetails = (tripId: string | undefined) => {
 
   const updateCity = useMutation({
     mutationFn: async ({ id, ...updates }: Partial<TripCity> & { id: string }) => {
-      const { data, error } = await supabase
-        .from('trip_cities')
-        .update(updates)
-        .eq('id', id)
-        .select()
-        .single();
-      
-      if (error) throw error;
-      return data as TripCity;
+      await updateDocument('trip_cities', id, updates as Record<string, any>);
+      const doc = await getDocument('trip_cities', id);
+      return doc as TripCity;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['trip-cities', tripId] });
@@ -236,8 +197,7 @@ export const useTripDetails = (tripId: string | undefined) => {
 
   const deleteCity = useMutation({
     mutationFn: async (id: string) => {
-      const { error } = await supabase.from('trip_cities').delete().eq('id', id);
-      if (error) throw error;
+      await deleteDocument('trip_cities', id);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['trip-cities', tripId] });
@@ -251,14 +211,9 @@ export const useTripDetails = (tripId: string | undefined) => {
 
   const addActivity = useMutation({
     mutationFn: async (activity: Omit<Activity, 'id' | 'created_at' | 'updated_at'>) => {
-      const { data, error } = await supabase
-        .from('activities')
-        .insert(activity)
-        .select()
-        .single();
-      
-      if (error) throw error;
-      return data as Activity;
+      const id = await addDocument('activities', activity);
+      const doc = await getDocument('activities', id);
+      return doc as Activity;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['activities', tripId] });
@@ -271,15 +226,9 @@ export const useTripDetails = (tripId: string | undefined) => {
 
   const updateActivity = useMutation({
     mutationFn: async ({ id, ...updates }: Partial<Activity> & { id: string }) => {
-      const { data, error } = await supabase
-        .from('activities')
-        .update(updates)
-        .eq('id', id)
-        .select()
-        .single();
-      
-      if (error) throw error;
-      return data as Activity;
+      await updateDocument('activities', id, updates as Record<string, any>);
+      const doc = await getDocument('activities', id);
+      return doc as Activity;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['activities', tripId] });
@@ -291,8 +240,7 @@ export const useTripDetails = (tripId: string | undefined) => {
 
   const deleteActivity = useMutation({
     mutationFn: async (id: string) => {
-      const { error } = await supabase.from('activities').delete().eq('id', id);
-      if (error) throw error;
+      await deleteDocument('activities', id);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['activities', tripId] });
@@ -306,7 +254,7 @@ export const useTripDetails = (tripId: string | undefined) => {
   const reorderCities = useMutation({
     mutationFn: async (cities: { id: string; order_index: number }[]) => {
       const updates = cities.map(({ id, order_index }) =>
-        supabase.from('trip_cities').update({ order_index }).eq('id', id)
+        updateDocument('trip_cities', id, { order_index })
       );
       await Promise.all(updates);
     },
@@ -334,13 +282,8 @@ export const useCities = () => {
   return useQuery({
     queryKey: ['cities'],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from('cities')
-        .select('*')
-        .order('name', { ascending: true });
-      
-      if (error) throw error;
-      return data as City[];
+      const docs = await getDocuments('cities', [orderBy('name', 'asc')]);
+      return docs as City[];
     },
   });
 };

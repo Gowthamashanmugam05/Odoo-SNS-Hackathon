@@ -25,6 +25,8 @@ const Navbar: React.FC = () => {
     navigate('/');
   };
 
+  
+
   const navLinks = user ? [
     { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { href: '/trips', label: 'My Trips', icon: Map },

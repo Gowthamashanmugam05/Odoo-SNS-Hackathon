@@ -6,7 +6,13 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { User, Mail, Loader2, LogOut, Trash2, ArrowLeft } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
-import { supabase } from '@/integrations/supabase/client';
+import { where, orderBy } from 'firebase/firestore';
+import {
+  getDocuments,
+  getDocument,
+  updateDocument,
+  deleteDocument,
+} from '@/integrations/firebase/operations';
 import Layout from '@/components/layout/Layout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -55,13 +61,8 @@ const Profile: React.FC = () => {
   const { data: profile } = useQuery({
     queryKey: ['profile', user?.id],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', user!.id)
-        .single();
-      if (error) throw error;
-      return data;
+      const doc = await getDocument('profiles', user!.id);
+      return doc;
     },
     enabled: !!user,
   });
@@ -69,12 +70,8 @@ const Profile: React.FC = () => {
   const { data: tripsCount } = useQuery({
     queryKey: ['trips-count', user?.id],
     queryFn: async () => {
-      const { count, error } = await supabase
-        .from('trips')
-        .select('*', { count: 'exact', head: true })
-        .eq('user_id', user!.id);
-      if (error) throw error;
-      return count || 0;
+      const docs = await getDocuments('trips', [where('user_id', '==', user!.id)]);
+      return docs?.length ?? 0;
     },
     enabled: !!user,
   });
@@ -89,11 +86,7 @@ const Profile: React.FC = () => {
 
   const updateProfile = useMutation({
     mutationFn: async (data: ProfileFormData) => {
-      const { error } = await supabase
-        .from('profiles')
-        .update({ name: data.name })
-        .eq('id', user!.id);
-      if (error) throw error;
+      await updateDocument('profiles', user!.id, { name: data.name });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['profile'] });
@@ -116,8 +109,22 @@ const Profile: React.FC = () => {
   const handleDeleteAccount = async () => {
     setIsLoading(true);
     try {
-      // Delete user data (trips will cascade delete)
-      await supabase.from('profiles').delete().eq('id', user!.id);
+      // Delete user data in Firestore (trips, trip_cities, activities, profile)
+      const userTrips = await getDocuments('trips', [where('user_id', '==', user!.id)]);
+      for (const t of userTrips || []) {
+        const tripId = t.id;
+        const cities = await getDocuments('trip_cities', [where('trip_id', '==', tripId)]);
+        for (const c of cities || []) {
+          const cityId = c.id;
+          const activities = await getDocuments('activities', [where('trip_city_id', '==', cityId)]);
+          for (const a of activities || []) {
+            await deleteDocument('activities', a.id);
+          }
+          await deleteDocument('trip_cities', cityId);
+        }
+        await deleteDocument('trips', tripId);
+      }
+      await deleteDocument('profiles', user!.id);
       await signOut();
       navigate('/');
       toast({ title: 'Account deleted', description: 'Your account has been permanently deleted.' });

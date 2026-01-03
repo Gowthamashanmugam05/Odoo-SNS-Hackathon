@@ -3,8 +3,9 @@ import { useParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { format, differenceInDays } from 'date-fns';
 import { Calendar, MapPin, Globe, Loader2, DollarSign, Copy, ExternalLink } from 'lucide-react';
-import { supabase } from '@/integrations/supabase/client';
 import { useQuery } from '@tanstack/react-query';
+import { where, orderBy } from 'firebase/firestore';
+import { getDocuments, getDocument } from '@/integrations/firebase/operations';
 import Layout from '@/components/layout/Layout';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -18,14 +19,8 @@ const SharedTrip: React.FC = () => {
   const { data: trip, isLoading: tripLoading } = useQuery({
     queryKey: ['shared-trip', token],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from('trips')
-        .select('*')
-        .eq('share_token', token!)
-        .eq('is_public', true)
-        .maybeSingle();
-      if (error) throw error;
-      return data;
+      const docs = await getDocuments('trips', [where('share_token', '==', token!), where('is_public', '==', true)]);
+      return docs?.[0] ?? null;
     },
     enabled: !!token,
   });
@@ -33,13 +28,8 @@ const SharedTrip: React.FC = () => {
   const { data: cities = [] } = useQuery({
     queryKey: ['shared-trip-cities', trip?.id],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from('trip_cities')
-        .select('*')
-        .eq('trip_id', trip!.id)
-        .order('order_index', { ascending: true });
-      if (error) throw error;
-      return data;
+      const docs = await getDocuments('trip_cities', [where('trip_id', '==', trip!.id), orderBy('order_index', 'asc')]);
+      return docs;
     },
     enabled: !!trip?.id,
   });
@@ -49,13 +39,8 @@ const SharedTrip: React.FC = () => {
     queryFn: async () => {
       if (!cities.length) return [];
       const cityIds = cities.map((c) => c.id);
-      const { data, error } = await supabase
-        .from('activities')
-        .select('*')
-        .in('trip_city_id', cityIds)
-        .order('activity_date', { ascending: true });
-      if (error) throw error;
-      return data;
+      const docs = await getDocuments('activities', [where('trip_city_id', 'in', cityIds), orderBy('activity_date', 'asc')]);
+      return docs;
     },
     enabled: cities.length > 0,
   });

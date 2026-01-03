@@ -289,7 +289,8 @@ export type Database = {
   }
 }
 
-type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">
+// Supabase types removed — keep an empty module to satisfy any lingering imports.
+export type DatabaseWithoutInternals = unknown;
 
 type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">]
 

@@ -101,6 +101,8 @@ const Auth: React.FC = () => {
     }
   };
 
+  
+
   return (
     <div className="min-h-screen flex">
       {/* Left Panel - Image */}
@@ -226,6 +228,7 @@ const Auth: React.FC = () => {
                   {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                   Create Account
                 </Button>
+            
               </form>
             </Form>
           ) : (
@@ -269,6 +272,7 @@ const Auth: React.FC = () => {
                   {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                   Sign In
                 </Button>
+                
               </form>
             </Form>
           )}

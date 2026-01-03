@@ -6,6 +6,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useTrips } from '@/hooks/useTrips';
 import Layout from '@/components/layout/Layout';
 import CreateTripForm from '@/components/trips/CreateTripForm';
+import TripExampleFirebase from '@/components/TripExampleFirebase';
 import { Button } from '@/components/ui/button';
 
 const CreateTrip: React.FC = () => {
@@ -73,6 +74,9 @@ const CreateTrip: React.FC = () => {
               onSubmit={handleSubmit}
               isLoading={createTrip.isPending}
             />
+            <div className="mt-6 border-t pt-6">
+              <TripExampleFirebase />
+            </div>
           </motion.div>
         </div>
       </div>
